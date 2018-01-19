@@ -464,6 +464,44 @@ Hint: you can use a loop not only to read from an array, like y[i], but also to 
 */
 
 //Jet solution
+var yearOfBirth = [1983, 1990, 2013];
+var ages = [];
+
+for(var i = 0; i < yearOfBirth.length; i++) {
+    ages[i] = 2018 - yearOfBirth[i];
+}
+
+for(var i = 0; i < ages.length; i++) {
+
+    if(ages[i] >= 18 ) {
+        console.log("this person is full age with age: " + ages[i]);
+    }
+}
+
+var printFullAge = function(years) {
+
+    var booleans = [];
+    for(var i = 0; i < years.length; i++) {
+
+        if(2018 - years[i] >= 18 ) {
+            booleans[i] = true;
+        } else {
+            booleans[i] = false;
+        }
+    }
+    return booleans;
+
+}
+
+var yearsOne = [1986, 1902, 2017];
+var yearsTwo = [2010, 1963, 1956, 2011];
+
+var full1 = printFullAge(yearsOne);
+var full2 = printFullAge(yearsTwo);
+
+console.log(full1);
+console.log(full2);
+
 
 
 /*
