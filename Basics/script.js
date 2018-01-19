@@ -255,6 +255,7 @@ if (x === 5) {
 
 ///////////////////////////////////////
 // Lecture: Arrays
+/*
 var names = ['John', 'Jane', 'Mark'];
 var years = new Array(1990, 1969, 1948);
 
@@ -265,6 +266,7 @@ console.log(names);
 //array able to contain different types
 var john = ['John', 'Smith', 1990, 'designer', false];
 
+//methods associates to array
 john.push('blue');  //create an element at the end
 john.unshift('Mr.');    //add an element at the beginning of the array
 john.pop();
@@ -274,6 +276,7 @@ console.log(john);
 if (john.indexOf('teacher') === -1) {   //find if element in array
     console.log('John is NOT a teacher.');
 }
+*/
 
 
 
@@ -283,7 +286,7 @@ if (john.indexOf('teacher') === -1) {   //find if element in array
 //Group variables together
 //no particular order
 
-var john = {
+/*var john = {
     name: 'John',
     lastName: 'Smith',
     yearOfBirth: 1990,
@@ -312,14 +315,14 @@ jane['yearOfBirth'] = 1969;
 jane['job'] = 'retired';
 jane['isMarried'] = true;
 
-console.log(jane);
+console.log(jane);*/
 
 
 
 ///////////////////////////////////////
 // Lecture: Objects and methods
 
-//create a function inside an object
+/*//create a function inside an object
 
 // v1.0
 var john = {
@@ -329,9 +332,12 @@ var john = {
     job: 'teacher',
     isMarried: false,
     family: ['Jane', 'Mark', 'Bob'],
-    calculateAge: function() {      //object can contain functions inside an object
-        //
-        return 2016 - this.yearOfBirth;
+    calculateAge: function() {
+        //object can contain functions, and these functions are called methods
+        //here we have a function expression
+        //same as var calculateAge = function() {}
+        //key value pairs in object does not have assignment operators
+        return 2016 - this.yearOfBirth; //use "this" keyword, refers to the object
     }
 };
 
@@ -349,12 +355,17 @@ console.log(john);
 var john = {
     name: 'John',
     lastName: 'Smith',
-    yearOfBirth: 1990,
+    yearOfBirth: 1998,
     job: 'teacher',
     isMarried: false,
     family: ['Jane', 'Mark', 'Bob'],
     calculateAge: function() {
+
+        //write age in object automatically
         this.age = 2016 - this.yearOfBirth;
+
+        //also works, but not flexible
+        john.age = 2016 - this.yearOfBirth;
     }
 };
 
@@ -365,12 +376,17 @@ console.log(john);
 var mike = {
     yearOfBirth: 1950,
     calculateAge: function() {
+        //wrong, use "this" key word
+        //john.age = 2016 - this.yearOfBirth;
+
+        //right
         this.age = 2016 - this.yearOfBirth;
+
     }
 };
 
 mike.calculateAge();
-console.log(mike);
+console.log(mike);*/
 
 
 
@@ -381,19 +397,15 @@ console.log(mike);
 for (var i = 0; i < 10; i++) {
     console.log(i);
 }
-*/
 
-/*
-0, true, print 0, update i to 1
-1, true, print 1, update i to 2
-.
-.
-.
-9, true, print 9, update i to 10
-10, FALSE, end loop!
-*/
+// 0, true, print 0, update i to 1
+// 1, true, print 1, update i to 2
+// .
+// .
+// .
+// 9, true, print 9, update i to 10
+// 10, FALSE, end loop!
 
-/*
 var names = ['John', 'Jane', 'Mary', 'Mark', 'Bob'];
 
 // for loops
@@ -450,6 +462,9 @@ Example output: [true, false, true]
 
 Hint: you can use a loop not only to read from an array, like y[i], but also to set values in an array, like y[i] = ... You can also use the specific array methods.
 */
+
+//Jet solution
+
 
 /*
 function printFullAge(years) {
