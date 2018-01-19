@@ -247,11 +247,14 @@ if (x === 5) {
 }
 */
 
+// difference:
+//     function expression produces a value
+//     function statement just do some actions
+
 
 
 ///////////////////////////////////////
 // Lecture: Arrays
-/*
 var names = ['John', 'Jane', 'Mark'];
 var years = new Array(1990, 1969, 1948);
 
@@ -271,7 +274,6 @@ console.log(john);
 if (john.indexOf('teacher') === -1) {
     console.log('John is NOT a teacher.');
 }
-*/
 
 
 
