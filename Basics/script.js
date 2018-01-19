@@ -262,16 +262,16 @@ console.log(names[2]);
 names[1] = 'Ben';
 console.log(names);
 
-
+//array able to contain different types
 var john = ['John', 'Smith', 1990, 'designer', false];
 
-john.push('blue');
-john.unshift('Mr.');
+john.push('blue');  //create an element at the end
+john.unshift('Mr.');    //add an element at the beginning of the array
 john.pop();
 john.shift();
 console.log(john);
 
-if (john.indexOf('teacher') === -1) {
+if (john.indexOf('teacher') === -1) {   //find if element in array
     console.log('John is NOT a teacher.');
 }
 
@@ -279,7 +279,10 @@ if (john.indexOf('teacher') === -1) {
 
 ///////////////////////////////////////
 // Lecture: Objects
-/*
+//Key value pairs
+//Group variables together
+//no particular order
+
 var john = {
     name: 'John',
     lastName: 'Smith',
@@ -302,7 +305,7 @@ console.log(john);
 
 
 
-var jane = new Object();
+var jane = new Object(); //var jane = {}
 jane.name = 'Jane';
 jane.lastName = 'Smith';
 jane['yearOfBirth'] = 1969;
@@ -310,15 +313,15 @@ jane['job'] = 'retired';
 jane['isMarried'] = true;
 
 console.log(jane);
-*/
 
 
 
 ///////////////////////////////////////
 // Lecture: Objects and methods
 
+//create a function inside an object
+
 // v1.0
-/*
 var john = {
     name: 'John',
     lastName: 'Smith',
@@ -326,7 +329,8 @@ var john = {
     job: 'teacher',
     isMarried: false,
     family: ['Jane', 'Mark', 'Bob'],
-    calculateAge: function() {
+    calculateAge: function() {      //object can contain functions inside an object
+        //
         return 2016 - this.yearOfBirth;
     }
 };
@@ -367,7 +371,6 @@ var mike = {
 
 mike.calculateAge();
 console.log(mike);
-*/
 
 
 
