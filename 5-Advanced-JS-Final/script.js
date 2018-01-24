@@ -1,24 +1,49 @@
+//Everything is an object in JavaScript, Except primitives value
+//Primitives: Numbers, Strings, Booleans, Undefined, null
+//Everything else is an Object:
+    //Array, Functions, Objects, Dates, Wrappers for Numbers, Strings, Booleans
+
+/*
+    Object Oriented Paradigm
+
+    Object Oriented Programming: (makes heavy use of Object, Properties and Methods)
+        * Objects interacting with one another through methods and properties to form complex applications
+        * Used to store data, structure applications into modules and keeping code clean
+
+ */
+
+
+
+
 /////////////////////////////
 // Lecture: Function constructor
-/*
+// Constructors and Instances in JavaScript
+// we can use special Person object as a BluePrint to create many persons object
+
 var john = {
     name: 'John',
     yearOfBirth: 1990,
     job: 'teacher'
 };
 
+// in many other languages, the following code is called a Class
+// But in JavaScript, we would like to call it "Constructors" or "Prototype"
+// Base on this constructor, we can create as many instances as we want.
+// Constructor acts as a BluePrint, which is used to create instances, which is also Objects
 var Person = function(name, yearOfBirth, job) {
     this.name = name;
     this.yearOfBirth = yearOfBirth;
     this.job = job;
-}
+};
 
+// calculateAge method in Person Constructor BluePrint
 Person.prototype.calculateAge  = function() {
     console.log(2016 - this.yearOfBirth);
 };
 
 Person.prototype.lastName = 'Smith';
 
+// Created from the person Constructor
 var john = new Person('John', 1990, 'teacher');
 var jane = new Person('Jane', 1969, 'designer');
 var mark = new Person('Mark', 1948, 'retired');
@@ -30,8 +55,12 @@ mark.calculateAge();
 console.log(john.lastName);
 console.log(jane.lastName);
 console.log(mark.lastName);
-*/
 
+
+/*
+    Inheritance:
+
+ */
 
 
 /////////////////////////////
