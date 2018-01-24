@@ -1,15 +1,3 @@
-/*
-GAME RULES:
-
-- The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score.
-    After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
-
-*/
-
 //only variable declaration here, not assigning the value yet
 var scores, roundScore, activePlayer, gamePlaying;
 
@@ -28,21 +16,21 @@ init();
 
 /* How is event then processed?
 
-    Remember about the execution context. (execution stack)
-    - Event can only be processed or handled when the execution stack is empty
-    - which means all the functions have returned.
+ Remember about the execution context. (execution stack)
+ - Event can only be processed or handled when the execution stack is empty
+ - which means all the functions have returned.
 
-    Beside of Execution Stack, we also have "Message Queue" in the javaScript Engine
-    This is where all the event that happen in the browser are put.
-    These events sit here and wait to be processed (after execution stack becomes empty)
+ Beside of Execution Stack, we also have "Message Queue" in the javaScript Engine
+ This is where all the event that happen in the browser are put.
+ These events sit here and wait to be processed (after execution stack becomes empty)
 
-    1) finish executing all functions in Execution stack
-    2) Message Queue takes in an event such as "click event"
-    3) put clickHandler() on execution Stack
+ 1) finish executing all functions in Execution stack
+ 2) Message Queue takes in an event such as "click event"
+ 3) put clickHandler() on execution Stack
 
 
 
-* */
+ * */
 
 //register an event listener to perform an action to a dom element when specific event occurs
 //'click' is one of the many events
@@ -63,35 +51,45 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         //Math.floor() removes the decimal portion of a number
         var dice = Math.floor(Math.random() * 6) + 1;
 
+        var dice2 = Math.floor(Math.random() * 6) + 1;
+
+        console.log('dice1: ' + dice);
+        console.log('dice2: ' + dice2);
+
         //2. Display the result
         //querySelector only selects the first one that matches
         /*
          <img src="dice-5.png" alt="Dice" class="dice" id="dice-1">
          <img src="dice-5.png" alt="Dice" class="dice" id="dice-2">
-        * */
-        var diceDOM = document.querySelector('.dice');
+         * */
+        var diceDOM = document.getElementById('dice-1');
         diceDOM.style.display = 'block';
         //change the src attribute
         diceDOM.src = 'dice-' + dice + '.png';
 
+        var diceDOM2 = document.getElementById('dice-2');
+        diceDOM2.style.display = 'block';
+        //change the src attribute
+        diceDOM2.src = 'dice-' + dice2 + '.png';
+
 
         //3. Update the round score IF the rolled number was NOT a 1
         // !== does not do type coercion
-        if (dice !== 1) {
+        if (dice !== 1 && dice2 !== 1) {
             //Add score
-            roundScore += dice;
+            roundScore += dice + dice2;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
         } else {
             //Next player
             //Use function here to don't repeat yourself (DRY principle)
             nextPlayer();
         }
-    }    
+    }
 });
 
 /*Remember about the execution context. (execution stack)
-- Event can only be processed or handled when the execution stack is empty
-- which means all the functions have returned.*/
+ - Event can only be processed or handled when the execution stack is empty
+ - which means all the functions have returned.*/
 document.querySelector('.btn-hold').addEventListener('click', function() {
     if (gamePlaying) {
         // Add CURRENT score to GLOBAL score
@@ -100,10 +98,22 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         // Update the UI
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
+        var input = document.querySelector('.final-score').value;
+        var winningScore;
+
+        // Undefined, 0, null or "" are COERCED to false
+        // Anything else is COERCED to true
+        if(input) {
+            winningScore = input;
+        } else {
+            winningScore = 100;
+        }
+
         // Check if player won the game
-        if (scores[activePlayer] >= 100) {
+        if (scores[activePlayer] >= winningScore) {
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-            document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-1').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
 
             //should add or remove CSS class in javaScript instead of changing CSS properties all the time
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -132,8 +142,9 @@ function nextPlayer() {
 
     //document.querySelector('.player-0-panel').classList.remove('active');
     //document.querySelector('.player-1-panel').classList.add('active');
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 
-    document.querySelector('.dice').style.display = 'none';
 }
 
 document.querySelector('.btn-new').addEventListener('click', init);
@@ -143,8 +154,10 @@ function init() {
     activePlayer = 0;
     roundScore = 0;
     gamePlaying = true;
-    
-    document.querySelector('.dice').style.display = 'none';
+
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
+
 
     //same as
     //document.querySelector('#score-0').textContent = '0';
@@ -168,16 +181,3 @@ function init() {
 
 
 
-
-
-
-
-
-/*
-YOUR 3 CHALLENGES
-Change the game to follow these rules:
-
-1. A player looses his ENTIRE score when he rolls two 6 in a row. After that, it's the next player's turn. (Hint: Always save the previous dice roll in a separate variable)
-2. Add an input field to the HTML where players can set the winning score, so that they can change the predefined score of 100. (Hint: you can read that value with the .value property in JavaScript. This is a good oportunity to use google to figure this out :)
-3. Add another dice to the game, so that there are two dices now. The player looses his current score when one of them is a 1. (Hint: you will need CSS to position the second dice, so take a look at the CSS code for the first one.)
-*/
