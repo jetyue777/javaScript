@@ -172,20 +172,43 @@ console.log(mark.lastName);
 
 /////////////////////////////
 // Lecture 2: Object.create
+// Function constructor pattern to create instance of the object from blueprint
+// But there are more ways to create Object and Inheritance
+    // Object.create is one of them
 
-var personProto = {
+//First we define an object that acts as a Prototype
+//Then we create an object base on this Prototype
+
+
+var personProto = { //not function constructor, just an Object now
     calculateAge: function() {
-        console.log(2016 - this.yearOfBirth);
+        console.log(2016 - this.yearOfBirth); //no yearOfBirth here!!!
     }
 };
 
+/*
+    Difference between using Object.create vs Function Constructor:
+
+    1) Object.create builds an object (jet) that inherits directly
+        from the object (personProto) we passed into the first argument
+    2) Function Constructor: the newly created object (john) inherits from
+        the Constructor's prototype property (Person.prototype)
+
+ */
 var jet = Object.create(personProto);
 jet.name = 'John';
 jet.yearOfBirth = 1990;
 jet.job = 'teacher';
 
+//Object.create accepts the second parameter
+/*
+ [ static, Object ] Object.create( [ Object ] proto,
+ [ Object, optional ] props )
+ */
 var bill = Object.create(personProto, {
-    name: { value: 'Bill' },
+
+            //we have to do it like this (strange way)
+    name: { value: 'Bill' },    //have to use the value "keyword"
     yearOfBirth: { value: 1969 },
     job: { value: 'designer' }
 });
@@ -194,27 +217,40 @@ var bill = Object.create(personProto, {
 
 /////////////////////////////
 // Lecture: Primitives vs objects
+
 /*
-// Primitives
+    Difference between Primitives vs Objects
+        1) Variable containing primitives actually hold the value inside the variable itself
+        2) Variable associated with Object do not actually contain the object.
+            but instead, the variable contains the reference to the place in memory where the
+            object is stored. The variable that declares the object does not have the real copy
+            of the object. It just points to the object.
+
+
+ */
+/*
+
+// *****************Primitives
 var a = 23;
 var b = a;
 a = 46;
-console.log(a);
-console.log(b);
+console.log(a); //46
+console.log(b); //23
 
 
 
-// Objects
+// *****************Objects
 var obj1 = {
     name: 'John',
     age: 26
 };
-var obj2 = obj1;
+var obj2 = obj1;    //new reference point to the originally created object. no new object is created
 obj1.age = 30;
-console.log(obj1.age);
-console.log(obj2.age);
+console.log(obj1.age);      //both are 30
+console.log(obj2.age);      //both are 30
 
-// Functions
+// *****************Functions
+// Inside function, it works exactly the same way.
 var age = 27;
 var obj = {
     name: 'Jonas',
@@ -222,21 +258,27 @@ var obj = {
 };
 
 function change(a, b) {
+
+    // change value of a does not change variable age
+    // when we pass a primitive into a function, a simple value is created
+    // we can change a here as much as we want without affecting variable outside
     a = 30;
+
+    //change property city of b changes the property value of obj object
+    // we pass the reference of the object into the function
     b.city = 'San Francisco';
 }
 
 change(age, obj);
 
-console.log(age);
-console.log(obj.city);
+console.log(age);       //27
+console.log(obj.city);      //San Francisco
 */
 
 
 
 /////////////////////////////
 // Lecture: Passing functions as arguments
-/*
 var years = [1990, 1965, 1937, 2005, 1998];
 
 function arrayCalc(arr, fn) {
@@ -270,7 +312,6 @@ var rates = arrayCalc(ages, maxHeartRate);
 
 console.log(ages);
 console.log(rates);
-*/
 
 
 
