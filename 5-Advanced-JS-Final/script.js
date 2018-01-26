@@ -20,37 +20,133 @@
 // Constructors and Instances in JavaScript
 // we can use special Person object as a BluePrint to create many persons object
 
+// Writing john object using the object literal
 var john = {
     name: 'John',
     yearOfBirth: 1990,
     job: 'teacher'
 };
 
+// Imaging we want want to create many similar objects with name ...
+// We can use Function Constructor
+
+
 // in many other languages, the following code is called a Class
 // But in JavaScript, we would like to call it "Constructors" or "Prototype"
 // Base on this constructor, we can create as many instances as we want.
 // Constructor acts as a BluePrint, which is used to create instances, which is also Objects
+// Each and every object we create is an instance of the "Object" constructor, which has many methods
+//  in its prototype property. eg. toString()
+
+// Convention: We always Write Function Constructor start with Capital letter
+//
 var Person = function(name, yearOfBirth, job) {
+
+    // we want to attach the pass in arguments to the "this" variable of the function's execution context
+
     this.name = name;
     this.yearOfBirth = yearOfBirth;
     this.job = job;
+
+    //also work john.calculateAge()
+    //##### But imaging we have 100 methods each with hundreds line of code,
+    //then each instance (john, jane, mark) of Person will have a copy of all these methods
+    //not very efficient, 3 copies of the same thing
+    //use inheritance here!!!
+
+/*    this.calculateAge = function() {
+        console.log(2016 - this.yearOfBirth);
+    }*/
 };
 
+
+/*
+ Inheritance: when object is based on another object.
+ when object gets the access of the other project's method and properties
+
+
+ JavaScript Inheritance:
+
+ JavaScript is a PROTOTYPE based language, which means inheritance works by using Prototype:
+ Each JavaScript Object has a Prototype property, which makes inheritance possible in JavaScript
+
+ How does Inheritance actually work?
+ Back to Person Example. Person Object is the constructor and John is one of the instances
+ If we want John to inherit some method or property from the Person Object,
+ ### we have to add that method or property to the Person's Prototype Property (Person.prototype) ### Eg. Person.prototype.calculateAge
+
+ The Person's prototype property is the Prototype of John
+ */
+
 // calculateAge method in Person Constructor BluePrint
+//Each JavaScript Object has a Prototype property, which makes inheritance possible in JavaScript
+// Add calculateAge method to the Person's prototype property
 Person.prototype.calculateAge  = function() {
     console.log(2016 - this.yearOfBirth);
 };
 
+//not very common to attach properties to prototype property
 Person.prototype.lastName = 'Smith';
 
-// Created from the person Constructor
+// Created from the person Constructor, they are person instances
+// If we want John to inherit some method or property from the Person Object,
+//### we have to add that method or property to the Person's Prototype Property (Person.prototype))### Eg. Person.prototype.calculateAge
+//John Inherit the method calculateAge and property lastName
+
+// Instantiation: objects here are instances of the Person object
+/* How does the "new" operation work?
+    1) A brand new empty object is created
+    2) Function Constructor is called with the argument we specified
+    3) calling a function creating a new Execution Context, that also has a this variable
+    4) "this" variable points to the new object created at the beginning of by the "new" operator
+        (not the global object, although it's a regular function call)
+
+  */
+
+//NONE of the object here has the "calculateAge" method attached to them!!!
+//But they can use "calculateAge" method because the method is in their prototype (john.__proto__)
 var john = new Person('John', 1990, 'teacher');
 var jane = new Person('Jane', 1969, 'designer');
 var mark = new Person('Mark', 1948, 'retired');
 
+/*
+*       #############Prototype Chain makes Inheritance possible in JavaScript
+*
+*
+*  John Prototype () -> Person Prototype (calculateAge) -> Object Prototype (toString() ... ) -> null (final link)
+*
+*  When we try to access a certain Method or Property on an Object (eg, john.calculateAge()),
+*  JavaScript will try to find that method on that exact object (john).
+*  But if it can not find it, it will look into the object's prototype (which is the prototype property of its parent)
+*   So it moves up in the prototype chain, if the method is still not there, it continues until there's no more
+*   prototype to look at, which is null, null is the only one that has no prototype, (undefined returned)
+*
+*
+* **************************SUMMARY *******************************
+*
+* 1) Every JavaScript object has a prototype property, which makes inheritance possible in JavaScript.
+* 2) The prototype property of an object (eg Person.prototype) is where we put methods and properties
+*       that we want other objects to inherit (eg. john)
+* 3) The Constructor's prototype property (eg Person.prototype) is NOT
+*       the prototype of the Constructor itself (Person.__proto__),
+*       it's the prototype of ALL instances that are created through it (eg, john.__proto__);
+* 4) When a certain method (or property) is called, the search starts in the object itself (john),
+*       and if it cannot be found, the search moves on to the object's prototype (john.__proto__ same as Person.prototype).
+*       This continues until the method is found: prototype chain.
+* */
+
+//john.prototype is undefined
+//john.__proto__ is same as Person.prototype
+//john.__proto__ is the prototype of the john object
+//john.__proto__ === Person.prototype
+//true
+// Person.prototype is NOT same as Person.__proto__ (prototype of Person itself)
+
 john.calculateAge();
 jane.calculateAge();
 mark.calculateAge();
+
+
 
 console.log(john.lastName);
 console.log(jane.lastName);
@@ -58,31 +154,41 @@ console.log(mark.lastName);
 
 
 /*
-    Inheritance:
+    Due to prototype chain, we can use the hasOwnProperty function on john object
+
+     john.hasOwnProperty('job')
+        true
+     john.hasOwnProperty('lastName')    //lastName is not john's own property
+        false                               //it's inherited from the Person's Prototype property
+
+
+     john instanceof Person
+     true
 
  */
 
 
+
+
 /////////////////////////////
-// Lecture: Object.create
-/*
+// Lecture 2: Object.create
+
 var personProto = {
     calculateAge: function() {
         console.log(2016 - this.yearOfBirth);
     }
 };
 
-var john = Object.create(personProto);
-john.name = 'John';
-john.yearOfBirth = 1990;
-john.job = 'teacher';
+var jet = Object.create(personProto);
+jet.name = 'John';
+jet.yearOfBirth = 1990;
+jet.job = 'teacher';
 
-var jane = Object.create(personProto, {
-    name: { value: 'Jane' },
+var bill = Object.create(personProto, {
+    name: { value: 'Bill' },
     yearOfBirth: { value: 1969 },
     job: { value: 'designer' }
 });
-*/
 
 
 
