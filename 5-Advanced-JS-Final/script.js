@@ -279,11 +279,30 @@ console.log(obj.city);      //San Francisco
 
 /////////////////////////////
 // Lecture: Passing functions as arguments
+/*
+    1) A function is an instance of the Object type
+    2) A function behave like any other Object
+    3) We can story function inside an variable
+    4) We can pass a function as an argument to another function
+        why do we want this?
+    5) We can also return a function from a function
+        why do we want this? call back function?
+            pass function into event listener to execute as call back
+
+    6) In JavaScript, we have first class functions
+
+ */
+/*
 var years = [1990, 1965, 1937, 2005, 1998];
+
+
+// fn is a function that actually do the calculation
 
 function arrayCalc(arr, fn) {
     var arrRes = [];
     for (var i = 0; i < arr.length; i++) {
+
+        //fn() to call the passed in function
         arrRes.push(fn(arr[i]));
     }
     return arrRes;
@@ -305,36 +324,60 @@ function maxHeartRate(el) {
     }
 }
 
-
+// able to use the same arrayCalc function for all three scenarios
+// pass different function as the second argument for different scenarios
 var ages = arrayCalc(years, calculateAge);
 var fullAges = arrayCalc(ages, isFullAge);
 var rates = arrayCalc(ages, maxHeartRate);
 
 console.log(ages);
-console.log(rates);
+console.log(fullAges);
+console.log(rates);*/
 
 
 
 /////////////////////////////
 // Lecture: Functions returning functions
+
 /*
+        Usage cases:
+
+        1) Base on input, return different desired functions
+        2) create a bunch of more specific functions base on a generic function
+
+ */
+
+//create a bunch of more specific functions base on a generic function
 function interviewQuestion(job) {
     if (job === 'designer') {
+
+        // return anonymous function that will be used later
+        // this is possible because in JavaScript, functions are first class functions
+        // actually return an object here
         return function(name) {
-            console.log(name + ', can you please explain what UX design is?');
+            console.log(name + ', can you please explain what UX design is?' + job);
         }
     } else if (job === 'teacher') {
+
         return function(name) {
-            console.log('What subject do you teach, ' + name + '?');
+            console.log('What subject do you teach, ' + name + '?' + job);
         }
     } else {
+
         return function(name) {
-            console.log('Hello ' + name + ', what do you do?');
+            console.log('Hello ' + name + ', what do you do?' + job);
         }
     }
 }
 
 var teacherQuestion = interviewQuestion('teacher');
+/*
+
+var teacherQuestion = function(name) {
+    console.log(name + ', can you please explain what UX design is?' + job);
+ }
+ */
+
 var designerQuestion = interviewQuestion('designer');
 
 
@@ -344,14 +387,34 @@ designerQuestion('jane');
 designerQuestion('Mark');
 designerQuestion('Mike');
 
+//interviewQuestion('teacher') returns a function
+// able to call interviewQuestion('teacher') right away!!
 interviewQuestion('teacher')('Mark');
-*/
+
+interviewQuestion('other')('Jet');
 
 
 
 /////////////////////////////
 // Lecture: IIFE
+// Immediately Invoked Function Expressions
+
 /*
+    It is function expression, not function declaration
+
+    We can only call IIFE ONCE!! not intended for re-usability.
+    IIFE for data privacy
+
+ */
+
+//Want to design a game to HIDE the score from the outside world
+//Create a new scope that is hidden from the outside scope.
+//With this we obtain Data privacy, and also don't interfere with
+// other variables in our global execution context
+
+// a few problems with this approach
+// we don't need to declare a function with a name and then call it
+// we can do it a better way
 function game() {
     var score = Math.random() * 10;
     console.log(score >= 5);
@@ -359,19 +422,30 @@ function game() {
 game();
 
 
+// use IIFE
+// use (function() {}) outer bracket to trick the JavaScript to think
+// it as an expression, because anything inside a () can not be a statement
+// treat as an expression
 (function () {
     var score = Math.random() * 10;
     console.log(score >= 5);
-})();
+})(); //() to invoke the function
 
+// also work
+var test = (function () {
+    var score = Math.random() * 10;
+    console.log(score >= 5);
+});
+
+test();
 //console.log(score);
 
+// we can pass a parameter here :D !!
 
 (function (goodLuck) {
     var score = Math.random() * 10;
     console.log(score >= 5 - goodLuck);
 })(5);
-*/
 
 
 
