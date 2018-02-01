@@ -452,18 +452,46 @@ test();
 /////////////////////////////
 // Lecture: Closures
 /*
+        An inner function has always access to the variables and parameters
+        of its outer function, even after the outer function has returned.
+
+        How Closure works:
+
+       ## EVEN after a function returns, and the execution context is gone
+       (from the execution stack), the variable object is still there (in the execution stack!!).
+       VO still sits in memory and can be accessed. Still in the execution stack,
+       and also in the Scope Chain. The Scope Chain is a pointer to the variable object.
+
+        The Scope Chain always stays intact
+
+
+ */
+
 function retirement(retirementAge) {
     var a = ' years left until retirement.';
+
+    // The Scope Chain always stays intact
     return function(yearOfBirth) {
         var age = 2016 - yearOfBirth;
+        // The Scope Chain always stays intact, able to access outer variables
         console.log((retirementAge - age) + a);
     }
-}
+}   //retirement function finishes it's execution context gets popped off the stack
+//
 
+//store the returned function inside the retirementUS variable
 var retirementUS = retirement(66);
+
+/*
+ Closure (retirement)
+ a:" years left until retirement."
+ retirementAge:65
+ */
 var retirementGermany = retirement(65);
 var retirementIceland = retirement(67);
 
+
+//
 retirementGermany(1990);
 retirementUS(1990);
 retirementIceland(1990);
@@ -472,6 +500,9 @@ retirementIceland(1990);
 
 
 function interviewQuestion(job) {
+
+    // Execution context of the inner function will close in over
+    // the variable object of the function that we had before (job variable).
     return function(name) {
         if (job === 'designer') {
             console.log(name + ', can you please explain what UX design is?');
@@ -484,13 +515,16 @@ function interviewQuestion(job) {
 }
 
 interviewQuestion('teacher')('John');
-*/
 
 
 
 /////////////////////////////
 // Lecture: Bind, call and apply
+// These methods allow to call a function and set the this variable manually
 /*
+
+ */
+
 var john = {
     name: 'John',
     age: 26,
@@ -512,14 +546,34 @@ var emily = {
 
 john.presentation('formal', 'morning');
 
-john.presentation.call(emily, 'friendly', 'afternoon');
 
-//john.presentation.apply(emily, ['friendly', 'afternoon']);
+// CALL method
+// emily object does not have the presentation method.
+// The first argument of the call method is always to set the this variable.
+// set this variable to emily
+// method borrowing
+john.presentation.call(emily, 'friendly', 'afternoon');
+//Hey! What's up? I'm Emily, I'm a designer and I'm 35 years old. Have a nice afternoon.
+
+// APPLY method, Vary similar to CALL
+// Accepts the arguments as array
+john.presentation.apply(emily, ['friendly', 'afternoon']);
+
+
+// BIND method, very similar as the CALL method as well
+// Allows us to set the this variable explicitly
+// BIND doesn't immediately call the function, but instead,
+//it generates a copy of the function, so that we can store it somewhere
+
+// Create function with PRESET Argument!!! (eg, johnFriendly)
+// CARRYING technique
+// Create a function base on another function, but with some preset parameters
 
 var johnFriendly = john.presentation.bind(john, 'friendly');
 
 johnFriendly('morning');
 johnFriendly('night');
+
 
 var emilyFormal = john.presentation.bind(emily, 'formal');
 emilyFormal('afternoon');
@@ -545,10 +599,14 @@ function isFullAge(limit, el) {
 }
 
 var ages = arrayCalc(years, calculateAge);
+// arrayCalc fn is always called with one argument
+// here use bind to create a copy of the function with preset argument
+// we dont really care about the "this" variable value in our case,
+// simply pass in this
 var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+
 console.log(ages);
 console.log(fullJapan);
-*/
 
 
 

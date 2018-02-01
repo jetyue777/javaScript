@@ -143,7 +143,7 @@ function first() {
 
 // The concept of execution context, scope and scope chain is very related.
 // Execution stack is different from the scope chain
-// Execution Stack is the order of the functions get called
+// Execution Stack is the order of the functions get called when EXECUTION
 // BUT the scope chain is the order of the functions written in the code
 
 // Example to show the difference between execution stack and scope chain
