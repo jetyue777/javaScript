@@ -36,11 +36,16 @@
 
  */
 
+
 // Module
 // BUDGET CONTROLLER
 // IFFE that returns an Object
+// IFFE creates a new scope that is not visible from the outside scope
+// Secrete of Module pattern is that we return an Object that contains
+    //all the functions that we want public
 var budgetController = (function() {
-    
+
+    //Function Constructor
     var Expense = function(id, description, value) {
         this.id = id;
         this.description = description;
@@ -48,7 +53,7 @@ var budgetController = (function() {
         this.percentage = -1;
     };
     
-    
+    //inheritance
     Expense.prototype.calcPercentage = function(totalIncome) {
         if (totalIncome > 0) {
             this.percentage = Math.round((this.value / totalIncome) * 100);
@@ -62,14 +67,14 @@ var budgetController = (function() {
         return this.percentage;
     };
     
-    
+    //Function Constructor
     var Income = function(id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
     };
     
-    
+    // like Private function, used in the public API
     var calculateTotal = function(type) {
         var sum = 0;
         data.allItems[type].forEach(function(cur) {
@@ -78,7 +83,8 @@ var budgetController = (function() {
         data.totals[type] = sum;
     };
     
-    
+    // Private data structure
+    // is better than separate variables
     var data = {
         allItems: {
             exp: [],
@@ -91,9 +97,15 @@ var budgetController = (function() {
         budget: 0,
         percentage: -1
     };
-    
-    
+
+    // Secrete of Module pattern is that we return an Object that contains
+    // all the functions that we want public
     return {
+
+        //The followings are like public functions (public API)
+        // Public functions can use inner/private variables or methods
+            //even after the outer IIFE function has already executed
+            //Thanks to the power of closures
         addItem: function(type, des, val) {
             var newItem, ID;
             
@@ -191,6 +203,8 @@ var budgetController = (function() {
         
         getBudget: function() {
             return {
+
+                //able to access internal data variable due to closure
                 budget: data.budget,
                 totalInc: data.totals.inc,
                 totalExp: data.totals.exp,
@@ -209,6 +223,12 @@ var budgetController = (function() {
 
 
 // UI CONTROLLER
+// Does not communicate with BudgetController directly
+// separation of concern - each part of the application should
+// only be interested in doing one thing independently
+// Need another controller to connect these two modules together
+// eg. Read Data from the UI module and and add Data as an expense into
+// the budge module ( create global app controller )
 var UIController = (function() {
     
     var DOMstrings = {
@@ -266,6 +286,8 @@ var UIController = (function() {
     return {
         getInput: function() {
             return {
+
+                // able to write expressions here in the object :D
                 type: document.querySelector(DOMstrings.inputType).value, // Will be either inc or exp
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
@@ -275,11 +297,13 @@ var UIController = (function() {
         
         addListItem: function(obj, type) {
             var html, newHtml, element;
+
             // Create HTML string with placeholder text
-            
+            // Technique for adding big chunks of HTML into the DOM
             if (type === 'inc') {
                 element = DOMstrings.incomeContainer;
-                
+                //copy HTML template form HTML file to here, wrap inside single quote, then remove white space
+                //in between. Use placeholders here for actual data (eg. %id%, % is custom)
                 html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer;
@@ -293,6 +317,7 @@ var UIController = (function() {
             newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
             
             // Insert the HTML into the DOM
+            //'beforeend' is the position we want to use (check documentation for reference)
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
         
@@ -307,15 +332,23 @@ var UIController = (function() {
         
         clearFields: function() {
             var fields, fieldsArr;
-            
+            //querySelectorAll returns a list, not an array
+            // directly selects HTML element !!! DOM
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
-            
+
+            //convert list into array
+            //fields is not an array, can not call fields.slice()
+            //need to use Array Function Constructor to trigger the call
+            // all Array methods we inherit are inside the Array prototype property
             fieldsArr = Array.prototype.slice.call(fields);
-            
+
+            //pass call back function to each element inside the array
             fieldsArr.forEach(function(current, index, array) {
                 current.value = "";
             });
-            
+
+            //WTH? how does this code work???
+            //modify directly on DOM!!
             fieldsArr[0].focus();
         },
         
@@ -393,15 +426,35 @@ var UIController = (function() {
 
 
 
-// GLOBAL APP CONTROLLER
+/*GLOBAL APP CONTROLLER
+
+    Need another controller to connect these two modules together
+    eg. Read Data from the UI module and and add Data as an expense into
+    the budge module ( create global app controller )
+
+    IMPORTANT!!
+    Modules are just function expressions. So we can pass in arguments
+    into modules.
+*/
+
+//pass the other two modules into it so it knows the other two and can connect them
 var controller = (function(budgetCtrl, UICtrl) {
-    
+
+    //not a good practice!!
+    // Makes controller less independent. eg, renaming budgeController
+    // budgetController.calculateBudget();
+
+    //Set up event listener here to delegate event to other controllers
     var setupEventListeners = function() {
         var DOM = UICtrl.getDOMstrings();
-        
+
+        //first select an element, then attach the eventListener
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
-        document.addEventListener('keypress', function(event) {
+        //keypress event for return key
+        document.querySelector(DOM.inputValue).addEventListener('keypress', function(event) {
+
+            //function here can receive an event argument
             if (event.keyCode === 13 || event.which === 13) {
                 ctrlAddItem();
             }
@@ -492,6 +545,14 @@ var controller = (function(budgetCtrl, UICtrl) {
     
     
     return {
+        /*
+            How and why to create an initialization function?
+
+            1) organize controller a bit better, should only have functions here
+                call setupEventListeners to initialize the controller
+            2)
+
+         */
         init: function() {
             console.log('Application has started.');
             UICtrl.displayMonth();
@@ -501,6 +562,8 @@ var controller = (function(budgetCtrl, UICtrl) {
                 totalExp: 0,
                 percentage: -1
             });
+
+            //need to call this function by putting inside the init function.
             setupEventListeners();
         }
     };
@@ -508,4 +571,44 @@ var controller = (function(budgetCtrl, UICtrl) {
 })(budgetController, UIController);
 
 
+/*
+                                            ##NEW CONCEPT##
+        EVENT Delegation: very important
+
+            Event Bubbling:
+            - when an event is fired or triggered on some DOM element, then
+                the exact same event is also triggered on all of the parent
+                elements. one at a time all the way up in a DOM tree
+
+            Target Element: (the delete button in our example)
+            - The element that caused the event to happen.
+            - All parents knows the target element of the event.
+                where the event was first fired.
+
+            Event Delegation:
+            (not to setup event handler on the original element that we are interested in)
+            (event bubbles up the DOM tree and we know where the event was fired)
+            Then we can simply attach an event Handler to the parent element and wait
+            for the event to bubble up, then do whatever to the target element.
+
+
+            WHY do we want to use Event Delegation???
+            - When we have an element with lots of child elements that we are interested in.
+                Instead of adding an event handler to all these child elements, we simply
+                add it to the parent element, and then determine on which child element
+                the event was fired.
+            - When we want an event handler attached to an element that is not yet in the
+                DOm when our page is loaded. We can not add an event handler to something
+                that is not in our page.
+
+
+            In our example, we can add event handler to the main element
+
+
+
+ */
+
+
+
+// without this line of code, nothing will going to happen
 controller.init();
