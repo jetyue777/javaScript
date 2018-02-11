@@ -139,17 +139,42 @@ var budgetController = (function() {
             var ids, index;
             
             // id = 6
+
+            //can not use below code to index the element
             //data.allItems[type][id];
+
+            //elements with id can be deleted
             // ids = [1 2 4  8]
             //index = 3
-            
+
+            //return all the ids
+            /*
+                    Array map method receives a callback function
+                    which has access to the current element
+
+                    map returns a brand new array!
+             */
             ids = data.allItems[type].map(function(current) {
+
+                //return something here to store inside new array
                 return current.id;
             });
 
+            //find out index of input id
             index = ids.indexOf(id);
 
+            // id exist in array
             if (index !== -1) {
+
+                /*
+                    Another new method in array:
+
+                    splice method to remove element
+                    arguments:
+                    1) start index
+                    2) delete count
+
+                 */
                 data.allItems[type].splice(index, 1);
             }
             
@@ -194,9 +219,12 @@ var budgetController = (function() {
         
         
         getPercentages: function() {
+
+            //map loops through each object and store the returned results
             var allPerc = data.allItems.exp.map(function(cur) {
                 return cur.getPercentage();
             });
+            //array of all the percentage
             return allPerc;
         },
         
@@ -244,7 +272,8 @@ var UIController = (function() {
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
         expensesPercLabel: '.item__percentage',
-        dateLabel: '.budget__title--month'
+        dateLabel: '.budget__title--month',
+        item: 'item'
     };
     
     
@@ -373,7 +402,10 @@ var UIController = (function() {
         displayPercentages: function(percentages) {
             
             var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
-            
+
+            //loops through each of these selected nodes and change the text content
+            //node list (LIST) does not have the foreach method
+            //can use the hack as before to convert into array then use for each
             nodeListForEach(fields, function(current, index) {
                 
                 if (percentages[index] > 0) {
@@ -459,7 +491,17 @@ var controller = (function(budgetCtrl, UICtrl) {
                 ctrlAddItem();
             }
         });
-        
+
+
+        /*
+         Event Delegation:
+         (not to setup event handler on the original element that we are interested in)
+         (event bubbles up the DOM tree and we know where the event was fired)
+         Then we can simply attach an event Handler to the parent element and wait
+         for the event to bubble up, then do whatever to the target element.
+
+         DOM.container satisfies
+         */
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
         
         document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);        
@@ -518,13 +560,49 @@ var controller = (function(budgetCtrl, UICtrl) {
     
     
     var ctrlDeleteItem = function(event) {
+
         var itemID, splitID, type, ID;
-        
-        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+
+        /*
+         <div class="item clearfix" id="income-0">
+             <div class="item__description">Salary</div>
+             <div class="right clearfix">
+                 <div class="item__value">+ 2,100.00</div>
+                 <div class="item__delete">
+                     <button class="item__delete--btn">
+                        <i class="ion-ios-close-outline"></i>
+                     </button>
+                 </div>
+             </div>
+         </div>
+
+
+         event.target here is "<i class="ion-ios-close-outline"></i>"
+
+
+         */
+        // we can get where the target element is by using event argument
+
+        //DOM traversing
+        console.log(event.target); // <i class="ion-ios-close-outline"></i>
+
+        function findParent(el, className) {
+            while((el = el.parentElement) && !el.classList.contains(className));
+            return el;
+        }
+
+        // better solution than manually traversing, heavily relying on DOM structure
+        itemID = findParent(event.target, UICtrl.getDOMstrings().item).id;
+
+        //itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
         
         if (itemID) {
             
             //inc-1
+            //as soon as we call method on string, JS automatically put a wrapper
+            // to the string and converts it from a primitive to an object, then
+            // this object has access to a lot of string methods.
             splitID = itemID.split('-');
             type = splitID[0];
             ID = parseInt(splitID[1]);
