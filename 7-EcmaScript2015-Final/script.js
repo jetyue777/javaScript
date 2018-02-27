@@ -112,6 +112,7 @@ console.log(j); //prints out 23!!
 
 /////////////////////////////////
 // Lecture: Blocks and IIFEs
+/*
 
 // ES6
 // Block to achieve data privacy
@@ -132,6 +133,7 @@ console.log(c);
 })();
 
 //console.log(c);
+*/
 
 
 
@@ -437,7 +439,7 @@ for(var i = 0; i < boxesArr5.length; i++) {
 
 
 //ES6
-// new "for off" loop, works with break or continue statement
+// new "for of" loop, works with break or continue statement
 for (const cur of boxesArr6) {
     //cur.className === 'box blue' also works
     if (cur.className.includes('blue')) {
@@ -702,7 +704,7 @@ console.log(question.get(ans === question.get('correct')));
 
 
 /*
-        Classes does not really anything new to the language
+        Classes is not really anything new to the language
         they are just synthetic sugar over the way we do Prototype Inheritance
         in JavaScript
 
@@ -905,7 +907,6 @@ All the report data should be printed to the console.
 HINT: Use some of the ES6 features: classes, subclasses, template strings, default parameters, maps, arrow functions, destructuring, etc.
 
 */
-/*
 
 
 class Element {
@@ -1000,4 +1001,4 @@ function reportStreets(s) {
 }
 
 reportParks(allParks);
-reportStreets(allStreets);*/
+reportStreets(allStreets);
